@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>우리 반 방명록</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@320;330;340;400;480;540;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-primary: #000000;
+    --color-on-primary: #ffffff;
+    --color-ink: #000000;
+    --color-canvas: #ffffff;
+    --color-hairline: #e6e6e6;
+    --color-hairline-soft: #f1f1f1;
+    --color-surface-soft: #f7f7f5;
+    --color-block-lime: #dceeb1;
+    --color-block-pink: #efd4d4;
+
+    --font-sans: "Inter", "SF Pro Display", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "SF Mono", monospace;
+
+    --rounded-md: 8px;
+    --rounded-lg: 24px;
+    --rounded-pill: 50px;
+
+    --space-xs: 8px;
+    --space-sm: 12px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-xxl: 48px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 320;
+    font-size: 18px;
+    line-height: 1.45;
+    letter-spacing: -0.26px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 430px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-lg) var(--space-xxl);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.54px;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    margin: 0 0 var(--space-xs);
+  }
+
+  h1 {
+    font-family: var(--font-sans);
+    font-weight: 340;
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: -0.9px;
+    margin: 0 0 var(--space-xxl);
+  }
+
+  .form-block {
+    background: var(--color-block-lime);
+    border-radius: var(--rounded-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xxl);
+  }
+
+  .form-block .eyebrow { margin-bottom: var(--space-sm); }
+
+  .field {
+    margin-bottom: var(--space-md);
+  }
+
+  .field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 480;
+    margin-bottom: 6px;
+  }
+
+  .field input {
+    width: 100%;
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 320;
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--rounded-md);
+    padding: 12px 14px;
+    outline: none;
+  }
+
+  .field input:focus {
+    border-color: var(--color-ink);
+  }
+
+  .submit-btn {
+    width: 100%;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-family: var(--font-sans);
+    font-size: 20px;
+    font-weight: 480;
+    letter-spacing: -0.1px;
+    border: none;
+    border-radius: var(--rounded-pill);
+    padding: 12px 20px;
+    cursor: pointer;
+    min-height: 44px;
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .error-msg {
+    display: none;
+    margin: var(--space-sm) 0 0;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-block-pink);
+    border-radius: var(--rounded-md);
+    font-size: 14px;
+    font-weight: 480;
+  }
+
+  .list-heading {
+    font-size: 26px;
+    font-weight: 540;
+    letter-spacing: -0.26px;
+    margin: 0 0 var(--space-md);
+  }
+
+  .empty-state {
+    font-size: 16px;
+    font-weight: 330;
+    color: var(--color-ink);
+    padding: var(--space-lg) 0;
+  }
+
+  #guestbook-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  #guestbook-list li {
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--rounded-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  #guestbook-list .entry-name {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  #guestbook-list .entry-message {
+    display: block;
+    font-size: 16px;
+    font-weight: 330;
+    margin-bottom: var(--space-xs);
+    word-break: break-word;
+  }
+
+  #guestbook-list .entry-time {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.6px;
+    color: var(--color-ink);
+    opacity: 0.55;
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <p class="eyebrow">GUESTBOOK</p>
+    <h1>우리 반<br>방명록</h1>
+
+    <div class="form-block">
+      <p class="eyebrow">글 남기기</p>
+
+      <div class="field">
+        <label for="name-input">이름</label>
+        <input id="name-input" type="text" placeholder="이름을 입력하세요">
+      </div>
+
+      <div class="field">
+        <label for="message-input">한 줄 인사</label>
+        <input id="message-input" type="text" placeholder="반가운 인사를 남겨주세요">
+      </div>
+
+      <button id="submit-btn" class="submit-btn">남기기</button>
+      <p id="error-msg" class="error-msg"></p>
+    </div>
+
+    <h2 class="list-heading">남겨진 인사</h2>
+    <p id="empty-state" class="empty-state" style="display: none;">아직 남겨진 인사가 없어요.</p>
+    <ul id="guestbook-list"></ul>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = "https://qlqusyzaezadkagvefqj.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_QgReYSu7fviTKwTFGBtkfA_gJyIgDkd";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const nameInput = document.getElementById("name-input");
+    const messageInput = document.getElementById("message-input");
+    const submitBtn = document.getElementById("submit-btn");
+    const errorMsg = document.getElementById("error-msg");
+    const list = document.getElementById("guestbook-list");
+    const emptyState = document.getElementById("empty-state");
+
+    function showError(text) {
+      errorMsg.textContent = text;
+      errorMsg.style.display = "block";
+    }
+
+    function clearError() {
+      errorMsg.style.display = "none";
+      errorMsg.textContent = "";
+    }
+
+    function formatTime(isoString) {
+      const d = new Date(isoString);
+      return d.toLocaleString("ko-KR");
+    }
+
+    async function loadEntries() {
+      const { data, error } = await supabaseClient
+        .from("guestbook")
+        .select("name, message, created_at")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        showError("목록을 불러오지 못했습니다: " + error.message);
+        return;
+      }
+
+      list.innerHTML = "";
+      emptyState.style.display = data.length === 0 ? "block" : "none";
+
+      for (const entry of data) {
+        const li = document.createElement("li");
+
+        const nameEl = document.createElement("strong");
+        nameEl.className = "entry-name";
+        nameEl.textContent = entry.name;
+
+        const messageEl = document.createElement("span");
+        messageEl.className = "entry-message";
+        messageEl.textContent = entry.message;
+
+        const timeEl = document.createElement("small");
+        timeEl.className = "entry-time";
+        timeEl.textContent = formatTime(entry.created_at);
+
+        li.appendChild(nameEl);
+        li.appendChild(messageEl);
+        li.appendChild(timeEl);
+        list.appendChild(li);
+      }
+    }
+
+    async function submitEntry() {
+      const name = nameInput.value.trim();
+      const message = messageInput.value.trim();
+
+      if (!name || !message) {
+        showError("이름과 글을 모두 입력해 주세요.");
+        return;
+      }
+
+      clearError();
+      submitBtn.disabled = true;
+
+      const { error } = await supabaseClient
+        .from("guestbook")
+        .insert({ name, message });
+
+      submitBtn.disabled = false;
+
+      if (error) {
+        showError("저장에 실패했습니다: " + error.message);
+        return;
+      }
+
+      nameInput.value = "";
+      messageInput.value = "";
+      await loadEntries();
+    }
+
+    submitBtn.addEventListener("click", submitEntry);
+    loadEntries();
+  </script>
+</body>
+</html>
